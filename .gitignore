@@ -1,0 +1,23 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Klucze podpisu – NIGDY nie wrzucaj ich do repozytorium
+*.keystore
+*.jks
+keystore-base64.txt
+
+# Pliki budowane automatycznie
+_site/
+ruch-na-luzie.apk
+qr-kod.png

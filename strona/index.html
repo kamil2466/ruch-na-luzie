@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ruch Na Luzie – bezpłatna aplikacja</title>
+  <meta name="description" content="Bezpłatna aplikacja do codziennego ruchu, spokojnego oddechu i dobrego samopoczucia.">
+  <style>
+    :root {
+      --green: #1B5E20;
+      --green-2: #2E7D32;
+      --green-light: #E8F5E9;
+      --blue: #01579B;
+      --text: #1f2a22;
+      --muted: #4a5a4e;
+      --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--text);
+      background: linear-gradient(180deg, #DCEDC8 0%, #F1F8E9 45%, #E0F2F1 100%);
+      min-height: 100vh;
+    }
+    main { max-width: 680px; margin: 0 auto; padding: 24px 16px 48px; }
+    header { text-align: center; padding: 16px 0 8px; }
+    .logo { font-size: 64px; line-height: 1; }
+    h1 { color: var(--green); font-size: 40px; margin: 8px 0 4px; }
+    .lead { font-size: 22px; color: var(--muted); margin: 0 0 24px; }
+    .card {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 24px;
+      margin: 20px 0;
+      box-shadow: 0 8px 24px rgba(27, 94, 32, 0.10);
+    }
+    h2 { color: var(--green); font-size: 26px; margin: 0 0 12px; }
+    .btn {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 24px;
+      padding: 22px 16px;
+      border-radius: 20px;
+      margin: 12px 0 6px;
+      color: #fff;
+      background: var(--green-2);
+      box-shadow: 0 6px 16px rgba(27, 94, 32, 0.30);
+    }
+    .btn.blue { background: var(--blue); box-shadow: 0 6px 16px rgba(1, 87, 155, 0.30); }
+    .btn:focus-visible { outline: 4px solid #FFB300; outline-offset: 3px; }
+    .hint { text-align: center; color: var(--muted); font-size: 18px; margin: 0 0 4px; }
+    ol { padding-left: 28px; margin: 8px 0 0; }
+    li { margin: 10px 0; }
+    .sub { font-weight: 700; color: var(--blue); margin: 18px 0 4px; }
+    .qr { text-align: center; }
+    .qr img { width: 260px; max-width: 80%; height: auto; border: 8px solid #fff; border-radius: 12px; }
+    .print {
+      font: inherit; font-weight: 700; font-size: 20px;
+      padding: 14px 24px; border-radius: 16px; cursor: pointer;
+      border: 2px solid var(--green-2); background: #fff; color: var(--green);
+    }
+    footer { text-align: center; font-size: 16px; color: var(--muted); margin-top: 32px; }
+    footer a { color: var(--blue); }
+    .only-print { display: none; }
+
+    @media print {
+      body { background: #fff; font-size: 18px; }
+      .no-print { display: none !important; }
+      .only-print { display: block; }
+      .card { box-shadow: none; border: 2px solid #ccc; }
+      .qr img { width: 320px; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="logo" aria-hidden="true">🏃</div>
+      <h1>Ruch Na Luzie</h1>
+      <p class="lead">Bezpłatna aplikacja do codziennego ruchu, spokojnego oddechu i dobrego samopoczucia.</p>
+    </header>
+
+    <section class="card no-print">
+      <h2>Zacznij od razu</h2>
+      <a class="btn" href="app/">▶ Otwórz aplikację</a>
+      <p class="hint">Działa na każdym telefonie. Nic nie trzeba instalować.</p>
+
+      <a class="btn blue" href="__APK_URL__">⬇ Pobierz na telefon z Androidem</a>
+      <p class="hint">Dla osób, które wolą mieć zainstalowaną aplikację.</p>
+    </section>
+
+    <section class="card">
+      <h2>Jak dodać ikonkę na ekran telefonu</h2>
+      <p>Dzięki temu aplikację otworzysz jednym dotknięciem, jak każdą inną.</p>
+
+      <p class="sub">Telefon z Androidem (przeglądarka Chrome)</p>
+      <ol>
+        <li>Dotknij przycisku <b>„Otwórz aplikację”</b>.</li>
+        <li>Dotknij <b>trzech kropek ⋮</b> w prawym górnym rogu.</li>
+        <li>Wybierz <b>„Dodaj do ekranu głównego”</b> i potwierdź <b>„Dodaj”</b>.</li>
+      </ol>
+
+      <p class="sub">iPhone (przeglądarka Safari)</p>
+      <ol>
+        <li>Dotknij przycisku <b>„Otwórz aplikację”</b>.</li>
+        <li>Dotknij ikony <b>Udostępnij</b> (kwadrat ze strzałką w górę) na dole ekranu.</li>
+        <li>Wybierz <b>„Do ekranu początkowego”</b> i dotknij <b>„Dodaj”</b>.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Instalacja pliku na Androidzie</h2>
+      <ol>
+        <li>Dotknij przycisku <b>„Pobierz na telefon z Androidem”</b>.</li>
+        <li>Gdy pobieranie się skończy, dotknij <b>„Otwórz”</b>.</li>
+        <li>Jeśli telefon zapyta o zgodę, wybierz <b>„Ustawienia”</b> i włącz <b>„Zezwalaj z tego źródła”</b>, potem wróć.</li>
+        <li>Dotknij <b>„Zainstaluj”</b>. Ikonka „Ruch Na Luzie” pojawi się na telefonie.</li>
+      </ol>
+    </section>
+
+    <section class="card qr">
+      <h2>Podziel się aplikacją</h2>
+      <p class="no-print">Pokaż ten kod znajomym – wystarczy, że skierują na niego aparat telefonu.</p>
+      <p class="only-print">Skieruj aparat telefonu na kod i dotknij linku, który się pojawi.</p>
+      <img src="qr.png" alt="Kod QR prowadzący do strony aplikacji Ruch Na Luzie">
+      <p><b>__PAGE_URL__</b></p>
+      <button class="print no-print" type="button" onclick="window.print()">🖨 Wydrukuj ulotkę</button>
+    </section>
+
+    <footer>
+      <!-- Tutaj wpisz wymaganą informację o dofinansowaniu i ewentualnie logotypy, np.:
+           <p>Projekt dofinansowany ze środków …</p> -->
+      <p>Projekt otwarty (open source) – kod źródłowy dostępny bezpłatnie:<br>
+        <a href="__REPO_URL__">__REPO_URL__</a></p>
+    </footer>
+  </main>
+</body>
+</html>

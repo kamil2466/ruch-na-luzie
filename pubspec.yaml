@@ -1,0 +1,16 @@
+name: ruch_na_luzie
+description: "Ruch Na Luzie – bezpłatna aplikacja wspierająca codzienny ruch i dobre samopoczucie."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.3.0
+
+flutter:
+  uses-material-design: true

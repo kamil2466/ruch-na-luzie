@@ -1,0 +1,115 @@
+# Automatyczne budowanie aplikacji po każdej zmianie w gałęzi "main":
+#  1) plik APK na Androida -> zakładka "Releases" w repozytorium
+#  2) wersja w przeglądarce + strona dla seniorów z kodem QR -> GitHub Pages
+
+name: Zbuduj i opublikuj aplikację
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publikacja
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pobierz kod
+        uses: actions/checkout@v4
+
+      - name: Zainstaluj Javę
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Zainstaluj Fluttera
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Uzupełnij pliki projektu (Android i przeglądarka)
+        run: |
+          flutter create . --platforms=android,web --project-name ruch_na_luzie --org pl.ruchnaluzie
+          rm -f test/widget_test.dart
+          sed -i 's/android:label="[^"]*"/android:label="Ruch Na Luzie"/' android/app/src/main/AndroidManifest.xml
+          sed -i 's|<title>[^<]*</title>|<title>Ruch Na Luzie</title>|' web/index.html
+          sed -i 's/"name": "[^"]*"/"name": "Ruch Na Luzie"/; s/"short_name": "[^"]*"/"short_name": "Ruch Na Luzie"/' web/manifest.json
+          flutter pub get
+
+      - name: Klucz podpisu Androida (sekret ANDROID_DEBUG_KEYSTORE)
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_DEBUG_KEYSTORE }}
+        run: |
+          if [ -n "$KEYSTORE" ]; then
+            mkdir -p ~/.android
+            echo "$KEYSTORE" | base64 -d > ~/.android/debug.keystore
+            echo "Użyto stałego klucza podpisu – aktualizacje będą się instalować bez problemu."
+          else
+            echo "::warning::Brak sekretu ANDROID_DEBUG_KEYSTORE – każda wersja APK będzie podpisana innym kluczem i aktualizacja będzie wymagała odinstalowania starej wersji."
+          fi
+
+      - name: Zbuduj APK (Android)
+        run: |
+          flutter build apk --release --build-name=1.0.${{ github.run_number }} --build-number=${{ github.run_number }}
+          cp build/app/outputs/flutter-apk/app-release.apk ruch-na-luzie.apk
+
+      - name: Zbuduj wersję przeglądarkową
+        run: |
+          REPO="${GITHUB_REPOSITORY#*/}"
+          flutter build web --release --base-href "/${REPO}/app/"
+
+      - name: Przygotuj stronę dla seniorów i kod QR
+        run: |
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          REPO="${GITHUB_REPOSITORY#*/}"
+          PAGE_URL="https://${OWNER}.github.io/${REPO}/"
+          REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+          APK_URL="${REPO_URL}/releases/latest/download/ruch-na-luzie.apk"
+          mkdir -p _site/app
+          cp -r build/web/. _site/app/
+          cp strona/index.html _site/index.html
+          sed -i "s|__PAGE_URL__|${PAGE_URL}|g; s|__REPO_URL__|${REPO_URL}|g; s|__APK_URL__|${APK_URL}|g" _site/index.html
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq qrencode
+          qrencode -s 12 -m 2 -o _site/qr.png "${PAGE_URL}"
+          cp _site/qr.png qr-kod.png
+          echo "Strona aplikacji: ${PAGE_URL}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Opublikuj wydanie z plikiem APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Ruch Na Luzie 1.0.${{ github.run_number }}
+          body: |
+            ruch-na-luzie.apk – plik do instalacji na telefonie z Androidem.
+            qr-kod.png – kod QR prowadzący do strony aplikacji (do wydruku).
+          files: |
+            ruch-na-luzie.apk
+            qr-kod.png
+          make_latest: 'true'
+
+      - name: Przygotuj paczkę strony
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Opublikuj stronę
+        id: deployment
+        uses: actions/deploy-pages@v4
