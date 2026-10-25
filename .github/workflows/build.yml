@@ -18,6 +18,10 @@ concurrency:
   group: publikacja
   cancel-in-progress: false
 
+env:
+  # Anonimowy licznik odwiedzin (panel: https://ruchnaluzie.goatcounter.com)
+  GOATCOUNTER: https://ruchnaluzie.goatcounter.com/count
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -44,6 +48,7 @@ jobs:
           sed -i 's/android:label="[^"]*"/android:label="Ruch Na Luzie"/' android/app/src/main/AndroidManifest.xml
           sed -i 's|<title>[^<]*</title>|<title>Ruch Na Luzie</title>|' web/index.html
           sed -i 's/"name": "[^"]*"/"name": "Ruch Na Luzie"/; s/"short_name": "[^"]*"/"short_name": "Ruch Na Luzie"/' web/manifest.json
+          grep -q gc.zgo.at web/index.html || sed -i "s|</head>|  <script data-goatcounter=\"${GOATCOUNTER}\" async src=\"//gc.zgo.at/count.js\"></script>\n</head>|" web/index.html
           flutter pub get
 
       - name: Klucz podpisu Androida (sekret ANDROID_DEBUG_KEYSTORE)
@@ -78,10 +83,11 @@ jobs:
           mkdir -p _site/app
           cp -r build/web/. _site/app/
           cp strona/index.html _site/index.html
-          sed -i "s|__PAGE_URL__|${PAGE_URL}|g; s|__REPO_URL__|${REPO_URL}|g; s|__APK_URL__|${APK_URL}|g" _site/index.html
+          sed -i "s|__PAGE_URL__|${PAGE_URL}|g; s|__REPO_URL__|${REPO_URL}|g; s|__APK_URL__|${APK_URL}|g; s|__GOATCOUNTER__|${GOATCOUNTER}|g" _site/index.html
           sudo apt-get update -qq
           sudo apt-get install -y -qq qrencode
-          qrencode -s 12 -m 2 -o _site/qr.png "${PAGE_URL}"
+          # Kod QR z dopiskiem źródła – w statystykach widać, ile osób weszło z ulotki
+          qrencode -s 12 -m 2 -o _site/qr.png "${PAGE_URL}?utm_source=ulotka"
           cp _site/qr.png qr-kod.png
           echo "Strona aplikacji: ${PAGE_URL}" >> "$GITHUB_STEP_SUMMARY"
 

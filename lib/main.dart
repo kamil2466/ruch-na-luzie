@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'analytics.dart';
+
 // =========================================================
 // KOLORY I POMOCNICZE
 // =========================================================
@@ -98,6 +100,7 @@ class AppState {
     earned[zone] = true;
     savedStage[zone] = 0;
     save();
+    trackEvent("strefa-${zone + 1}-ukonczona");
     return firstTime;
   }
 
